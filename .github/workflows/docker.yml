@@ -1,50 +1,54 @@
 name: Docker Image CI
 
-# Trigger this workflow on push to the main branch
 on:
   push:
-    branches: [ "main" ]
-
-# Grant GITHUB_TOKEN write permissions for the packages registry
-permissions:
-  contents: read
-  packages: write
-
-env:
-  # The name of your image in the GitHub Container Registry
-  IMAGE_NAME: ${{ github.repository }}
+    branches:
+      - main
+      - dev # Add your dev branch here
+      - 'feature/**' # Optional: for any feature branch
 
 jobs:
-  build-and-push:
+  build_and_push_image:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      # 1. Log in to GitHub Container Registry (GHCR)
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          # Use the built-in GITHUB_TOKEN secret for authentication
-          password: ${{ secrets.GITHUB_TOKEN }} 
+    permissions:
+      contents: read
+      packages: write
       
-      # 2. Extract metadata (tags, labels) for the Docker image
-      - name: Extract metadata (tags, labels)
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ghcr.io/${{ env.IMAGE_NAME }}
-          tags: |
-            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
-            type=sha,format=short
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-      # 3. Build and push the Docker image to GHCR
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+    - name: Log in to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Determine Image Tags
+      id: set_tags
+      run: |
+        # Get a sanitized, lowercased version of the branch name (e.g., "dev")
+        BRANCH_NAME=$(echo "${{ github.ref_name }}" | sed 's/[^a-zA-Z0-9-]/_/g' | tr '[:upper:]' '[:lower:]')
+
+        # Define the base name for the image
+        IMAGE_NAME=ghcr.io/${{ github.repository }}/network-monitor
+
+        # Conditionally set tags based on the branch
+        if [[ "${{ github.ref_name }}" == "main" ]]; then
+          # For the main branch, tag with 'latest'
+          TAGS="${IMAGE_NAME}:latest"
+        else
+          # For all other branches (like 'dev'), tag with the branch name
+          TAGS="${IMAGE_NAME}:${BRANCH_NAME}"
+        fi
+
+        # Output the tags for use in the next step
+        echo "TAGS=${TAGS}" >> $GITHUB_OUTPUT
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: true
+        tags: ${{ steps.set_tags.outputs.TAGS }}
