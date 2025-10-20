@@ -44,13 +44,17 @@ React.createElement('line', {
     x1: '7',
     y1: '7',
     x2: '17',
-    y2: '17'
+    y2: '17',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round'
   }),
   React.createElement('line', {
     x1: '17',
     y1: '7',
     x2: '7',
-    y2: '17'
+    y2: '17',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round'
   })
 );
 
@@ -73,10 +77,14 @@ const SwitchIcon = (props) => React.createElement('svg', {
     ry: '2'
   }),
   React.createElement('path', {
-    d: 'M7 9 L17 9'
+    d: 'M7 9 L17 9',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round'
   }),
   React.createElement('path', {
-    d: 'M17 15 L7 15'
+    d: 'M17 15 L7 15',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round'
   })
 );
 
