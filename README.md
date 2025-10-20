@@ -13,6 +13,7 @@ docker run example:
 docker run -d \
   --name=network-monitor \
   -e CONFIG_FILE=/config/network-monitor/config.json \
+  -e DEBUG_MODE=false \
   -p 5000:5000 \
   -v /path/to/config.json:/config/network-monitor/config.json \
   --restart unless-stopped \
@@ -27,6 +28,7 @@ services:
     container_name: network-monitor
     environment:
       - CONFIG_FILE=/config/network-monitor/config.json
+      - DEBUG_MODE=false
     volumes:
       - /path/to/config.json:/config/network-monitor/config.json
     ports:
