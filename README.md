@@ -39,7 +39,8 @@ services:
     * Load it up, you'll have example "nodes." You can remove those nodes by hovering and clicking the **red x**.
     * You can remove "links" by clicking the **red x**.
     * You can remove boxes by clicking the **red x**.
-    * You **can not edit** existing items you can add new items, links, or boxes at the top right of the screen.
+    * You **can not edit** existing items, you would need to remove and re-add. 
+    * you can add new items, links, or boxes at the top right of the screen.
 * If you use **VLANs** and the application's host, container, or VM can't reach the other VLANs via ICMP, you won't be able to monitor those nodes, this isn't a bug, it's just common sense.
 * If you run this in a **container** and want to monitor the docker host, **localhost will be the container itself**, not the host, this isn't a bug, it's just common sense.
 
