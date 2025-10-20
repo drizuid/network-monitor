@@ -32,7 +32,7 @@ jobs:
         BRANCH_NAME=$(echo "${{ github.ref_name }}" | sed 's/[^a-zA-Z0-9-]/_/g' | tr '[:upper:]' '[:lower:]')
 
         # Define the base name for the image
-        IMAGE_NAME=ghcr.io/${{ github.repository }}/network-monitor
+        IMAGE_NAME=ghcr.io/${{ github.repository }}
 
         # Conditionally set tags based on the branch
         if [[ "${{ github.ref_name }}" == "main" ]]; then
