@@ -44,5 +44,6 @@ services:
 * If you use **VLANs** and the application's host, container, or VM can't reach the other VLANs via ICMP, you won't be able to monitor those nodes, this isn't a bug, it's just common sense.
 * If you run this in a **container** and want to monitor the docker host, **localhost will be the container itself**, not the host, this isn't a bug, it's just common sense.
 * Objects are persistently stored in config.json as long as you properly mount the file from your host.
+* I will not add authentication or https support to this app, use a reverse proxy like [SWAG](https://github.com/linuxserver/docker-swag>)
 
 <img width="2121" height="1966" alt="image" src="https://github.com/user-attachments/assets/7b4e92a1-ef5d-4190-a3a5-430ce875a6e4" />
