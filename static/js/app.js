@@ -33,11 +33,24 @@ const RouterIcon = (props) => React.createElement('svg', {
     cy: '12',
     r: '10'
   }),
-  React.createElement('path', {
+/*  React.createElement('path', {
     d: 'M7 7 Q10 10 17 17'
   }),
   React.createElement('path', {
     d: 'M17 7 Q14 10 7 17'
+  })
+);*/
+React.createElement('line', {
+    x1: '7',
+    y1: '7',
+    x2: '17',
+    y2: '17'
+  }),
+  React.createElement('line', {
+    x1: '17',
+    y1: '7',
+    x2: '7',
+    y2: '17'
   })
 );
 
