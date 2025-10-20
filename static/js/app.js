@@ -28,10 +28,42 @@ const RouterIcon = (props) => React.createElement('svg', {
   height: props.size || 24,
   className: props.className
 },
+  React.createElement('circle', {
+    cx: '12',
+    cy: '12',
+    r: '10'
+  }),
   React.createElement('path', {
-    strokeLinecap: 'round',
-    strokeLinejoin: 'round',
-    d: 'M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 011.06 0z'
+    d: 'M7 7 Q10 10 17 17'
+  }),
+  React.createElement('path', {
+    d: 'M17 7 Q14 10 7 17'
+  })
+);
+
+const SwitchIcon = (props) => React.createElement('svg', {
+  xmlns: 'http://www.w3.org/2000/svg',
+  fill: 'none',
+  viewBox: '0 0 24 24',
+  strokeWidth: props.strokeWidth || 1.5,
+  stroke: 'currentColor',
+  width: props.size || 24,
+  height: props.size || 24,
+  className: props.className
+},
+  React.createElement('rect', {
+    x: '4',  // 4+
+    y: '4',  // 4+
+    width: '16', // 4-20
+    height: '16', // 4-20
+    rx: '2',
+    ry: '2'
+  }),
+  React.createElement('path', {
+    d: 'M7 9 L17 9'
+  }),
+  React.createElement('path', {
+    d: 'M17 15 L7 15'
   })
 );
 
@@ -253,6 +285,7 @@ const NetworkMonitor = () => {
     switch(type) {
       case 'router': return RouterIcon;
       case 'server': return ServerIcon;
+      case 'switch': return SwitchIcon;
       case 'wifi': return WifiIcon;
       case 'storage': return StorageIcon;
       // forgot end-user device, dont forget to add it
@@ -608,6 +641,7 @@ const NetworkMonitor = () => {
             },
             React.createElement('option', { value: 'router' }, 'Router'),
             React.createElement('option', { value: 'server' }, 'Server'),
+            React.createElement('option', { value: 'switch' }, 'Switch'),
             React.createElement('option', { value: 'wifi' }, 'WiFi AP'),
             React.createElement('option', { value: 'storage' }, 'Storage'),
             // i forgot the monitor to rep systems... oops make sure to add it
