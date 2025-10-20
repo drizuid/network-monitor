@@ -8,6 +8,7 @@ app = Flask(__name__, template_folder='templates', static_folder='static')
 CORS(app)
 
 CONFIG_FILE = os.environ.get('CONFIG_FILE', 'config.json')
+DEBUG_MODE = os.environ.get('DEBUG_MODE', 'false').lower() == 'true'
 
 def load_config():
     """Load configuration from JSON file"""
@@ -16,7 +17,8 @@ def load_config():
             with open(CONFIG_FILE, 'r') as f:
                 return json.load(f)
     except Exception as e:
-        print(f"Error loading config: {e}")
+        if DEBUG_MODE:
+            print(f"Error loading config: {e}")
     
     # toss some example devices in for funsies and to generate the example json
     return {
@@ -40,9 +42,11 @@ def save_config(config):
         os.makedirs(os.path.dirname(CONFIG_FILE) if os.path.dirname(CONFIG_FILE) else '.', exist_ok=True)
         with open(CONFIG_FILE, 'w') as f:
             json.dump(config, f, indent=2)
-        print(f"Config saved to {CONFIG_FILE}")
+        if DEBUG_MODE:
+            print(f"Config saved to {CONFIG_FILE}")
     except Exception as e:
-        print(f"Error saving config: {e}")
+        if DEBUG_MODE:
+            print(f"Error saving config: {e}")
 
 # for size reduction swap from pingutils to pythonping
 # well.. didn't really matter much, 68MB vs 61MB for a 72KB project... w/e
@@ -61,7 +65,8 @@ def ping_device(ip):
         else:
             return {'success': False, 'responseTime': None}
     except Exception as e:
-        print(f"Ping error for {ip}: {e}")
+        if DEBUG_MODE:
+            print(f"Ping error for {ip}: {e}")
         return {'success': False, 'responseTime': None}
 
 @app.route('/')
@@ -72,7 +77,8 @@ def index():
 def get_config():
     """Return the current configuration"""
     config = load_config()
-    print(f"Sending config: {config}")
+        if DEBUG_MODE:
+            print(f"Sending config: {config}")
     return jsonify(config)
 
 @app.route('/api/config', methods=['POST'])
@@ -80,11 +86,13 @@ def update_config():
     """Update the entire configuration"""
     try:
         config = request.json
-        print(f"Received config to save: {config}")
+        if DEBUG_MODE:
+            print(f"Received config to save: {config}")
         save_config(config)
         return jsonify({'success': True})
     except Exception as e:
-        print(f"Error in update_config: {e}")
+        if DEBUG_MODE:
+            print(f"Error in update_config: {e}")
         return jsonify({'success': False, 'error': str(e)}), 500
 
 @app.route('/api/ping', methods=['POST'])
@@ -111,5 +119,7 @@ def ping_all():
     return jsonify(results)
 
 if __name__ == '__main__':
+    if DEBUG_MODE:
+        print(f"Debug mode: ENABLED")    
     print(f"Config file location: {CONFIG_FILE}")
     app.run(debug=False, host='0.0.0.0', port=5000)
