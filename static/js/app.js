@@ -232,6 +232,8 @@ const NetworkMonitor = () => {
         setDevices(config.devices || []);
         setConnections(config.connections || []);
         setBoxes(config.boxes || []);
+        setZoom(config.zoom || 1);
+        setPanOffset(config.panOffset || { x: 0, y: 0 });
       } catch (error) {
         console.error('Failed to load config:', error);
       } finally {
@@ -254,7 +256,7 @@ const NetworkMonitor = () => {
           await fetch('/api/config', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ devices, connections, boxes })
+            body: JSON.stringify({ devices, connections, boxes, zoom, panOffset })
           });
         } catch (error) {
           console.error('Failed to save config:', error);
@@ -263,7 +265,7 @@ const NetworkMonitor = () => {
       const timeoutId = setTimeout(saveConfig, 1000);
       return () => clearTimeout(timeoutId);
     }
-  }, [devices, connections, boxes, isLoading]);
+  }, [devices, connections, boxes, isLoading, zoom, panOffset]);
 
   const pingDevice = async (ip) => {
     try {

@@ -22,14 +22,13 @@ def load_config():
     return {
         "devices": [
             {"id": 1, "name": "Core Switch", "ip": "192.168.128.254", "status": "unknown", "type": "switch", "x": 400, "y": 100},
-            {"id": 2, "name": "Edge Router", "ip": "192.168.128.1", "status": "unknown", "type": "router", "x": 200, "y": 100}
-        ],
+            {"id": 2, "name": "Edge Router", "ip": "192.168.128.1", "status": "unknown", "type": "router", "x": 200, "y": 100}],
         "connections": [
-            {"from": 2, "to": 1}
-        ],
+            {"from": 2, "to": 1}],
         "boxes": [
-            {"id": 1, "name": "Core Network", "x": 150, "y": 50, "width": 300, "height": 100, "color": "blue"}
-        ]
+            {"id": 1, "name": "Core Network", "x": 150, "y": 50, "width": 300, "height": 100, "color": "blue"}],
+        "zoom": 1,
+        "panOffset": {"x": 0, "y": 0}
     }
 
 def save_config(config):
