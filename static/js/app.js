@@ -33,11 +33,28 @@ const RouterIcon = (props) => React.createElement('svg', {
     cy: '12',
     r: '10'
   }),
-  React.createElement('path', {
+/*  React.createElement('path', {
     d: 'M7 7 Q10 10 17 17'
   }),
   React.createElement('path', {
     d: 'M17 7 Q14 10 7 17'
+  })
+);*/
+React.createElement('line', {
+    x1: '7',
+    y1: '7',
+    x2: '17',
+    y2: '17',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round'
+  }),
+  React.createElement('line', {
+    x1: '17',
+    y1: '7',
+    x2: '7',
+    y2: '17',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round'
   })
 );
 
@@ -60,10 +77,14 @@ const SwitchIcon = (props) => React.createElement('svg', {
     ry: '2'
   }),
   React.createElement('path', {
-    d: 'M7 9 L17 9'
+    d: 'M7 9 L17 9',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round'
   }),
   React.createElement('path', {
-    d: 'M17 15 L7 15'
+    d: 'M17 15 L7 15',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round'
   })
 );
 
@@ -641,11 +662,12 @@ const NetworkMonitor = () => {
             },
             React.createElement('option', { value: 'router' }, 'Router'),
             React.createElement('option', { value: 'server' }, 'Server'),
-            React.createElement('option', { value: 'switch' }, 'Switch'),
             React.createElement('option', { value: 'wifi' }, 'WiFi AP'),
             React.createElement('option', { value: 'storage' }, 'Storage'),
             // i forgot the monitor to rep systems... oops make sure to add it
-            React.createElement('option', { value: 'monitor' }, 'End-User Device')
+            React.createElement('option', { value: 'monitor' }, 'End-User Device'),
+            // i forgot to create one for a switch
+            React.createElement('option', { value: 'switch' }, 'Switch')
           )
         ),
         React.createElement('button', {
