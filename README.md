@@ -6,6 +6,32 @@ It was written for me based on what I wanted, but a friend asked if he could get
 While I am happy to entertain ideas for new features, I made this for me, so if I don't see a use I won't work on something. 
 If you still want the change, submit a fully tested PR and I'm happy to entertain pulls.
 
+docker run example:
+```bash
+docker run -d \
+  --name=network-monitor \
+  -e CONFIG_FILE=/config/network-monitor/config.json \
+  -p 5000:5000 \
+  -v /path/to/config.json:/config/network-monitor/config.json \
+  --restart unless-stopped \
+  ghcr.io/drizuid/network-monitor:latest
+  ```
+docker compose example:
+```yaml
+---
+services:
+  network-monitor:
+    image: ghcr.io/drizuid/network-monitor:latest
+    container_name: network-monitor
+    environment:
+      - CONFIG_FILE=/config/network-monitor/config.json
+    volumes:
+      - /path/to/config.json:/config/network-monitor/config.json
+    ports:
+      - 5000:5000
+    restart: unless-stopped
+```
+
 **Notes**: 
 * **Use:**
     * Load it up, you'll have example "nodes." You can remove those nodes by hovering and clicking the **red x**.
