@@ -33,14 +33,7 @@ const RouterIcon = (props) => React.createElement('svg', {
     cy: '12',
     r: '10'
   }),
-/*  React.createElement('path', {
-    d: 'M7 7 Q10 10 17 17'
-  }),
-  React.createElement('path', {
-    d: 'M17 7 Q14 10 7 17'
-  })
-);*/
-React.createElement('line', {
+  React.createElement('line', {
     x1: '7',
     y1: '7',
     x2: '17',
@@ -934,13 +927,7 @@ showAddBox && React.createElement(
               React.createElement(
                 'div',
                 { className: 'flex flex-col items-center' },
-/*
-                React.createElement(
-                  'div',
-                  { className: `${statusColor} ${connectFrom === device.id ? 'ring-4 ring-yellow-400' : ''} rounded-full p-4 mb-2 shadow-lg` },
-                  React.createElement(Icon, { size: 48, strokeWidth: 1.5 })
-                ),
-*/
+
 		React.createElement(
 		  'div',
 		  { className: 'flex flex-col items-center' },

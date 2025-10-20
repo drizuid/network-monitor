@@ -7,7 +7,6 @@ WORKDIR /config/network-monitor
 # set version label
 ARG BUILD_DATE
 ARG VERSION
-ARG NGINX_VERSION
 LABEL build_version="mindofdriz.cc version:- ${VERSION} Build-date:- ${BUILD_DATE}"
 LABEL maintainer="notdriz"
 
@@ -29,4 +28,4 @@ EXPOSE 5000
 
 VOLUME /config
 
-CMD ["python3", "app.py", "--host", "0.0.0.0", "--port", "5000"]
+CMD ["python3", "app.py"]
