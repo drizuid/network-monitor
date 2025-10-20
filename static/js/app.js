@@ -221,6 +221,9 @@ const NetworkMonitor = () => {
   const [isDraggingGroup, setIsDraggingGroup] = useState(false);
   const [groupDragStart, setGroupDragStart] = useState({ x: 0, y: 0 });
 
+  // AVG latency stuff
+  const [deviceStats, setDeviceStats] = useState({});
+
   const devicesRef = React.useRef(devices);
 
   // Load configuration on mount
@@ -291,7 +294,31 @@ const NetworkMonitor = () => {
 
         const results = await Promise.all(
           currentDevices.map(async (device) => {
-            const status = (await pingDevice(device.ip)) ? 'up' : 'down';
+            const result = await fetch('/api/ping', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ ip: device.ip })
+            }).then(r => r.json()).catch(() => ({ success: false, responseTime: null }));
+          
+            const status = result.success ? 'up' : 'down';
+
+            if (result.success && result.responseTime) {
+              setDeviceStats(prev => {
+                const deviceData = prev[device.id] || { times: [], count: 0 };
+                const newTimes = [...deviceData.times, result.responseTime].slice(-10); // Keep last 10
+                const avg = Math.round(newTimes.reduce((a, b) => a + b, 0) / newTimes.length);
+              
+                return {
+                  ...prev,
+                  [device.id]: {
+                    times: newTimes,
+                    count: deviceData.count + 1,
+                    avg: avg
+                  }
+                };
+              });
+            }
+
             return { ...device, status };
           })
         );
@@ -966,6 +993,11 @@ showAddBox && React.createElement(
                     'div',
                     { className: 'text-gray-400 text-xs text-center' },
                     device.ip
+                  ),
+                  device.status === 'up' && deviceStats[device.id] && React.createElement(
+                    'div',
+                    { className: 'text-green-400 text-xs text-center' },
+                    `${deviceStats[device.id].avg}ms avg`
                   )
                 )
               )
