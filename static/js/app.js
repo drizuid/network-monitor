@@ -932,11 +932,26 @@ showAddBox && React.createElement(
               React.createElement(
                 'div',
                 { className: 'flex flex-col items-center' },
+/*
                 React.createElement(
                   'div',
                   { className: `${statusColor} ${connectFrom === device.id ? 'ring-4 ring-yellow-400' : ''} rounded-full p-4 mb-2 shadow-lg` },
                   React.createElement(Icon, { size: 48, strokeWidth: 1.5 })
                 ),
+*/
+		React.createElement(
+		  'div',
+		  { className: 'flex flex-col items-center' },
+		  React.createElement(
+			'div',
+			{ className: `${connectFrom === device.id ? 'ring-4 ring-yellow-400 rounded-lg' : ''} mb-2` },
+			React.createElement(Icon, { 
+			  size: 64, 
+			  strokeWidth: 1.5,
+			  className: device.status === 'up' ? 'text-green-500' : 
+						 device.status === 'down' ? 'text-red-500' : 'text-gray-500'
+			})
+		 ) ),
                 React.createElement(
                   'div',
                   { className: 'bg-gray-800 border border-gray-700 rounded px-3 py-1' },
