@@ -641,11 +641,12 @@ const NetworkMonitor = () => {
             },
             React.createElement('option', { value: 'router' }, 'Router'),
             React.createElement('option', { value: 'server' }, 'Server'),
-            React.createElement('option', { value: 'switch' }, 'Switch'),
             React.createElement('option', { value: 'wifi' }, 'WiFi AP'),
             React.createElement('option', { value: 'storage' }, 'Storage'),
             // i forgot the monitor to rep systems... oops make sure to add it
-            React.createElement('option', { value: 'monitor' }, 'End-User Device')
+            React.createElement('option', { value: 'monitor' }, 'End-User Device'),
+            // i forgot to create one for a switch
+            React.createElement('option', { value: 'switch' }, 'Switch')
           )
         ),
         React.createElement('button', {
