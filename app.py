@@ -77,8 +77,8 @@ def index():
 def get_config():
     """Return the current configuration"""
     config = load_config()
-        if DEBUG_MODE:
-            print(f"Sending config: {config}")
+    if DEBUG_MODE:
+        print(f"Sending config: {config}")
     return jsonify(config)
 
 @app.route('/api/config', methods=['POST'])
