@@ -888,35 +888,58 @@ showAddBox && React.createElement(
           connections.map((conn, index) => {
             const from = getDeviceCenter(conn.from);
             const to = getDeviceCenter(conn.to);
+	    const midX = (from.x + to.x) / 2;
+	    const midY = (from.y + to.y) / 2;
             return React.createElement(
               'g',
-              { key: index },
+              { 
+                key: index,
+	        onMouseEnter: (e) => {
+	          e.currentTarget.querySelectorAll('.hover-show').forEach(el => {
+	            el.style.opacity = '1';
+	          });
+	        },
+	        onMouseLeave: (e) => {
+	          e.currentTarget.querySelectorAll('.hover-show').forEach(el => {
+	            el.style.opacity = '0';
+	          });
+	        }
+	      },
               React.createElement('line', {
                 x1: from.x,
                 y1: from.y,
                 x2: to.x,
                 y2: to.y,
                 stroke: '#4b5563',
-                strokeWidth: '2'
+                strokeWidth: '2',
+		style: { pointerEvents: 'stroke' }
               }),
               React.createElement('circle', {
-                cx: (from.x + to.x) / 2,
-                cy: (from.y + to.y) / 2,
+                cx: midX,
+                cy: midY,
                 r: '8',
                 fill: '#ef4444',
-                className: 'cursor-pointer pointer-events-auto',
+                className: 'cursor-pointer pointer-events-auto hover-show',
+                style: {
+		  opacity: '0',
+		  transition: 'opacity 0.2s'
+		},
                 onClick: () => removeConnection(index)
               }),
               React.createElement(
                 'text',
                 {
-                  x: (from.x + to.x) / 2,
-                  y: (from.y + to.y) / 2,
+                  x: midX,
+                  y: midY,
                   fill: 'white',
                   fontSize: '10',
                   textAnchor: 'middle',
                   dominantBaseline: 'middle',
-                  className: 'pointer-events-none'
+                  className: 'pointer-events-none hover-show',
+		  style: { 
+          	    opacity: '0',
+         	    transition: 'opacity 0.2s'
+       		  }
                 },
                 '×'
               )
@@ -934,13 +957,36 @@ showAddBox && React.createElement(
                 top: `${box.y}px`,
                 width: `${box.width}px`,
                 height: `${box.height}px`,
-                zIndex: 2
+                zIndex: 2,
+		pointerEvents: 'none' // fix because i couldn't hover the connection lines while they were behind a box
               },
-              onMouseDown: (e) => handleBoxMouseDown(e, box)
+              onMouseDown: (e) => { //yah i broke dragging the box with the connection line fix.. smh
+		const rect = e.currentTarget.getBoundingClientRect();
+        	const borderWidth = 2;
+ 	        const clickX = e.clientX - rect.left;
+    	        const clickY = e.clientY - rect.top;		
+        	const onBorder = clickX < borderWidth || clickX > rect.width - borderWidth ||
+                        	 clickY < borderWidth || clickY > rect.height - borderWidth;
+        
+        	if (onBorder) {
+		  handleBoxMouseDown(e, box)
+		}
+	      }
             },
+	    React.createElement('div', {
+	      style: {
+        	position: 'absolute',
+	        top: '2px',
+        	left: '2px',
+	        right: '2px',
+	        bottom: '2px',
+	        pointerEvents: 'none'
+	      }
+	    }),
             React.createElement(
               'div',
-              { className: 'absolute -top-6 left-0 bg-gray-800 px-2 py-1 rounded text-white text-sm font-semibold' },
+              { 
+		className: 'absolute -top-6 left-0 bg-gray-800 px-2 py-1 rounded text-white text-sm font-semibold' },
               box.name
             ),
             React.createElement(
