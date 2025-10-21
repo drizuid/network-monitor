@@ -182,6 +182,46 @@ const MonitorIcon = (props) => React.createElement('svg', {
   })
 );
 
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('Error caught by boundary:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return React.createElement(
+        'div',
+        { className: 'min-h-screen bg-gray-900 flex items-center justify-center' },
+        React.createElement(
+          'div',
+          { className: 'bg-gray-800 p-8 rounded-lg border border-red-500' },
+          React.createElement('h1', { className: 'text-2xl font-bold text-red-500 mb-4' }, 'Something went wrong'),
+          React.createElement('p', { className: 'text-white mb-4' }, 'The application encountered an error. Please refresh the page.'),
+          React.createElement(
+            'button',
+            {
+              onClick: () => window.location.reload(),
+              className: 'bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded'
+            },
+            'Reload Page'
+          )
+        )
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
 const NetworkMonitor = () => {
   // State declarations
   const [devices, setDevices] = useState([]);
@@ -1006,4 +1046,8 @@ showAddBox && React.createElement(
 };
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(React.createElement(NetworkMonitor));
+root.render(
+  React.createElement(ErrorBoundary, null,
+    React.createElement(NetworkMonitor)
+  )
+);
