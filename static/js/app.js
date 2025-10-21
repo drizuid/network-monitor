@@ -326,42 +326,61 @@ const NetworkMonitor = () => {
 
         const results = await Promise.all(
           currentDevices.map(async (device) => {
-            const result = await fetch('/api/ping', {
+	    try {
+              const response = await fetch('/api/ping', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ ip: device.ip })
-            }).then(r => r.json()).catch(() => ({ success: false, responseTime: null }));
-          
-            const status = result.success ? 'up' : 'down';
+            });
+	    const result = await response.json();
 
-            if (result.success && result.responseTime) {
-              setDeviceStats(prev => {
-                const deviceData = prev[device.id] || { times: [], count: 0 };
-                const newTimes = [...deviceData.times, result.responseTime].slice(-10); // Keep last 10
-                const avg = Math.round(newTimes.reduce((a, b) => a + b, 0) / newTimes.length);
+	    return {
+	      device,
+              status: result.success ? 'up' : 'down',
+              responseTime: result.responseTime
+	    };
+	  } catch (error) {
+	    console.error('Ping failed:', error);
+	    return {
+	      device,
+	      status: 'down',
+	      responseTime: null
+            };
+	  }
+	})
+      );
+      const updatedDevices = results.map(r => ({
+        ...r.device,
+        status: r.status
+      }));
+      setDevices(updatedDevices);
+
+      setDeviceStats(prevStats => {
+        const newStats = { ...prevStats };
+
+	results.forEach(r => {
+          if (r.status === 'up' && r.responseTime) {
+            const deviceData = newStats[r.device.id] || { times: [], count: 0 };
+            const newTimes = [...deviceData.times, r.responseTime].slice(-10); // 10 seems good enough, maybe 4 though?
+            const avg = Math.round(newTimes.reduce((a, b) => a + b, 0) / newTimes.length);
               
-                return {
-                  ...prev,
-                  [device.id]: {
-                    times: newTimes,
-                    count: deviceData.count + 1,
-                    avg: avg
-                  }
-                };
-              });
-            }
+            newStats[r.device.id] = {
+              times: newTimes,
+              count: deviceData.count + 1,
+              avg: avg
+            };
+          }
+        });
 
-            return { ...device, status };
-          })
-        );
-        setDevices(results);
-      };
+        return newStats;
+      });
+    };
 
-      checkDevices();
-      const interval = setInterval(checkDevices, 30000);
-      return () => clearInterval(interval);
-    }
-  }, [isLoading]);
+    checkDevices();
+    const interval = setInterval(checkDevices, 30000);
+    return () => clearInterval(interval);
+  }
+}, [isLoading]);
 
   const getDeviceIcon = (type) => {
     switch(type) {
