@@ -262,7 +262,7 @@ const NetworkMonitor = () => {
     }
   }, [devices, connections, boxes, isLoading, zoom, panOffset]);
 
-  const pingDevice = async (ip) => {
+  const pingDevice = React.useCallback(async (ip) => {
     try {
       const response = await fetch('/api/ping', {
         method: 'POST',
@@ -275,7 +275,7 @@ const NetworkMonitor = () => {
       console.error('Ping failed:', error);
       return false;
     }
-  };
+  }, []);
 
   // Check devices every 30 seconds
   useEffect(() => {
