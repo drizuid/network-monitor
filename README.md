@@ -1,5 +1,3 @@
-NOTE: I have debugging enabled by default and output to the browser console and stdout. disable if you don't want it.
-
 While I was in the US Army from 2002 to 2013 we regularly used a simple network monitoring program called SNMPc, created by a company called Castlerock. 
 While it had some advanced features, we generally just used it as a simple icmp check. Green icon for up, red icon for down. 
 The software itself looks very old (think windows 3.1 if you can) I decided I wanted something similar for my network, so I started work on a web based project to do the same thing and this is the result. 
