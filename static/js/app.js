@@ -578,10 +578,19 @@ const NetworkMonitor = () => {
     }
   }, [draggedDevice, draggedBox, resizingBox, offset, zoom, panOffset]);
 
+  const deviceCenters = React.useMemo(() => {
+    const centers = {};
+    devices.forEach(device => {
+      centers[device.id] = { 
+        x: device.x + 60, 
+        y: device.y + 48 
+      };
+    });
+    return centers;
+  }, [devices]);
+
   const getDeviceCenter = (deviceId) => {
-    const device = devices.find(d => d.id === deviceId);
-    if (!device) return { x: 0, y: 0 };
-    return { x: device.x + 60, y: device.y + 48 };
+    return deviceCenters[deviceId] || { x: 0, y: 0 };
   };
 
   const boxColors = {
