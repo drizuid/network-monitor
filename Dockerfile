@@ -22,6 +22,7 @@ RUN \
 COPY . .
 
 ENV CONFIG_FILE=/config/config.json
+ENV DEBUG_MODE=false
 
 # ports and volumes
 EXPOSE 5000
