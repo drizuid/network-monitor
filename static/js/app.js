@@ -1,6 +1,5 @@
 const { useState, useEffect } = React;
 
-// Simple SVG icon components
 const ServerIcon = (props) => React.createElement('svg', {
   xmlns: 'http://www.w3.org/2000/svg',
   fill: 'none',
@@ -571,10 +570,20 @@ const NetworkMonitor = () => {
     }
   }, [draggedDevice, draggedBox, resizingBox, offset, zoom, panOffset]);
 
+  // stackoverflow says this should make things more efficient... we shall see
+  const deviceCenters = React.useMemo(() => {
+    const centers = {};
+    devices.forEach(device => {
+      centers[device.id] = { 
+        x: device.x + 60, 
+        y: device.y + 48 
+      };
+    });
+    return centers;
+  }, [devices]);
+
   const getDeviceCenter = (deviceId) => {
-    const device = devices.find(d => d.id === deviceId);
-    if (!device) return { x: 0, y: 0 };
-    return { x: device.x + 60, y: device.y + 48 };
+    return deviceCenters[deviceId] || { x: 0, y: 0 };
   };
 
   const boxColors = {
