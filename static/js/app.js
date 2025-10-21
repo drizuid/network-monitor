@@ -977,34 +977,58 @@ showAddBox && React.createElement(
                 width: `${box.width}px`,
                 height: `${box.height}px`,
                 zIndex: 2,
-		pointerEvents: 'none' // fix because i couldn't hover the connection lines while they were behind a box
-              },
-              onMouseDown: (e) => { //yah i broke dragging the box with the connection line fix.. smh
-		const rect = e.currentTarget.getBoundingClientRect();
-        	const borderWidth = 2;
- 	        const clickX = e.clientX - rect.left;
-    	        const clickY = e.clientY - rect.top;		
-        	const onBorder = clickX < borderWidth || clickX > rect.width - borderWidth ||
-                        	 clickY < borderWidth || clickY > rect.height - borderWidth;
-        
-        	if (onBorder) {
-		  handleBoxMouseDown(e, box)
-		}
-	      }
+                pointerEvents: 'none' // Keep as none on the container
+              }
             },
-	    React.createElement('div', {
-	      style: {
-        	position: 'absolute',
-	        top: '2px',
-        	left: '2px',
-	        right: '2px',
-	        bottom: '2px',
-	        pointerEvents: 'none'
-	      }
-	    }),
-            React.createElement(
-              'div',
-              { 
+            // Make the BORDER clickable with a pseudo-element approach using 4 divs
+            React.createElement('div', {
+              className: 'absolute inset-0',
+              style: { pointerEvents: 'none' }
+            },
+             // Top border
+              React.createElement('div', {
+                className: 'absolute top-0 left-0 right-0',
+                style: { 
+                  height: '8px',
+                  pointerEvents: 'auto',
+                  cursor: 'grab'
+                },
+                onMouseDown: (e) => handleBoxMouseDown(e, box)
+              }),
+              // Bottom border
+              React.createElement('div', {
+                className: 'absolute bottom-0 left-0 right-0',
+                style: { 
+                  height: '8px',
+                  pointerEvents: 'auto',
+                  cursor: 'grab'
+                },
+                onMouseDown: (e) => handleBoxMouseDown(e, box)
+              }),
+              // Left border
+              React.createElement('div', {
+                className: 'absolute top-0 left-0 bottom-0',
+                style: { 
+                  width: '8px',
+                  pointerEvents: 'auto',
+                  cursor: 'grab'
+                },
+                onMouseDown: (e) => handleBoxMouseDown(e, box)
+              }),
+              // Right border
+              React.createElement('div', {
+                className: 'absolute top-0 right-0 bottom-0',
+                style: { 
+                  width: '8px',
+                  pointerEvents: 'auto',
+                  cursor: 'grab'
+                },
+                onMouseDown: (e) => handleBoxMouseDown(e, box)
+              })
+            ),
+        React.createElement(
+          'div',
+          { 
 		className: 'absolute -top-6 left-0 bg-gray-800 px-2 py-1 rounded text-white text-sm font-semibold' },
               box.name
             ),
@@ -1013,6 +1037,7 @@ showAddBox && React.createElement(
               {
                 onClick: () => removeBox(box.id),
                 className: 'absolute -top-2 -right-2 bg-red-600 hover:bg-red-700 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity z-10',
+                style: { pointerEvents: 'auto' },
                 onMouseDown: (e) => e.stopPropagation()
               },
               React.createElement(XIcon, { size: 12 })
@@ -1021,6 +1046,7 @@ showAddBox && React.createElement(
               'div',
               {
                 className: 'absolute bottom-0 right-0 w-4 h-4 cursor-nwse-resize',
+                style: { pointerEvents: 'auto' },
                 onMouseDown: (e) => {
                   e.stopPropagation();
                   setResizingBox(box.id);
