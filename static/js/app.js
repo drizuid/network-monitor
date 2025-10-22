@@ -256,6 +256,11 @@ const NetworkMonitor = () => {
   // AVG latency stuff
   const [deviceStats, setDeviceStats] = useState({});
 
+  // Node editing stuff
+  const [editingDevice, setEditingDevice] = useState(null);
+  const [editingBox, setEditingBox] = useState(null);
+  const [editForm, setEditForm] = useState({ name: '', ip: '', type: '', color: '' });
+
   const devicesRef = React.useRef(devices);
 
   // Load configuration on mount
@@ -568,6 +573,53 @@ const NetworkMonitor = () => {
     }
   };
 
+  const startEditDevice = (device) => {
+    setEditingDevice(device.id);
+    setEditForm({ 
+      name: device.name, 
+      ip: device.ip, 
+      type: device.type 
+    });
+  };
+  
+  const saveDeviceEdit = () => {
+    if (editForm.name && editForm.ip) {
+      setDevices(prev => prev.map(d => 
+        d.id === editingDevice 
+          ? { ...d, name: editForm.name, ip: editForm.ip, type: editForm.type }
+          : d
+      ));
+      setEditingDevice(null);
+      setEditForm({ name: '', ip: '', type: '', color: '' });
+    }
+  };
+  
+  const cancelEdit = () => {
+    setEditingDevice(null);
+    setEditingBox(null);
+    setEditForm({ name: '', ip: '', type: '', color: '' });
+  };
+  
+  const startEditBox = (box) => {
+    setEditingBox(box.id);
+    setEditForm({ 
+      name: box.name, 
+      color: box.color 
+    });
+  };
+  
+  const saveBoxEdit = () => {
+    if (editForm.name) {
+      setBoxes(prev => prev.map(b => 
+        b.id === editingBox 
+          ? { ...b, name: editForm.name, color: editForm.color }
+          : b
+      ));
+      setEditingBox(null);
+      setEditForm({ name: '', ip: '', type: '', color: '' });
+    }
+  };
+
   const addDevice = () => {
     if (newDevice.name && newDevice.ip) {
       setDevices(prev => [...prev, {
@@ -817,6 +869,109 @@ showAddBox && React.createElement(
         }, 'Cancel')
       )
     ),
+    (editingDevice || editingBox) && React.createElement(
+      'div',
+      { 
+        className: 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50',
+        onClick: cancelEdit
+      },
+      React.createElement(
+        'div',
+        { 
+          className: 'bg-gray-800 rounded-lg p-6 border border-gray-700 min-w-96',
+          onClick: (e) => e.stopPropagation()
+        },
+        React.createElement('h2', { className: 'text-xl font-bold text-white mb-4' }, 
+          editingDevice ? 'Edit Device' : 'Edit Box'
+        ),
+        React.createElement(
+          'div',
+          { className: 'space-y-4' },
+          React.createElement(
+            'div',
+            {},
+            React.createElement('label', { className: 'text-gray-400 text-sm block mb-1' }, 
+              editingDevice ? 'Device Name' : 'Box Name'
+            ),
+            React.createElement('input', {
+              type: 'text',
+              value: editForm.name,
+              onChange: (e) => setEditForm({...editForm, name: e.target.value}),
+              className: 'w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:outline-none focus:border-blue-500'
+            })
+          ),
+          editingDevice && React.createElement(
+            'div',
+            {},
+            React.createElement('label', { className: 'text-gray-400 text-sm block mb-1' }, 'IP Address'),
+            React.createElement('input', {
+              type: 'text',
+              value: editForm.ip,
+              onChange: (e) => setEditForm({...editForm, ip: e.target.value}),
+              className: 'w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:outline-none focus:border-blue-500'
+            })
+          ),
+          editingDevice && React.createElement(
+            'div',
+            {},
+            React.createElement('label', { className: 'text-gray-400 text-sm block mb-1' }, 'Type'),
+            React.createElement(
+              'select',
+              {
+                value: editForm.type,
+                onChange: (e) => setEditForm({...editForm, type: e.target.value}),
+                className: 'w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:outline-none focus:border-blue-500'
+              },
+              React.createElement('option', { value: 'router' }, 'Router'),
+              React.createElement('option', { value: 'server' }, 'Server'),
+              React.createElement('option', { value: 'wifi' }, 'WiFi AP'),
+              React.createElement('option', { value: 'storage' }, 'Storage'),
+              React.createElement('option', { value: 'monitor' }, 'End-User Device'),
+              React.createElement('option', { value: 'switch' }, 'Switch')
+            )
+          ),
+          editingBox && React.createElement(
+            'div',
+            {},
+            React.createElement('label', { className: 'text-gray-400 text-sm block mb-1' }, 'Color'),
+            React.createElement(
+              'select',
+              {
+                value: editForm.color,
+                onChange: (e) => setEditForm({...editForm, color: e.target.value}),
+                className: 'w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:outline-none focus:border-blue-500'
+              },
+              React.createElement('option', { value: 'blue' }, 'Blue'),
+              React.createElement('option', { value: 'green' }, 'Green'),
+              React.createElement('option', { value: 'purple' }, 'Purple'),
+              React.createElement('option', { value: 'red' }, 'Red'),
+              React.createElement('option', { value: 'yellow' }, 'Yellow'),
+              React.createElement('option', { value: 'orange' }, 'Orange')
+            )
+          ),
+          React.createElement(
+            'div',
+            { className: 'flex gap-2 mt-6' },
+            React.createElement(
+              'button',
+              {
+                onClick: editingDevice ? saveDeviceEdit : saveBoxEdit,
+                className: 'flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded'
+              },
+              'Save'
+            ),
+            React.createElement(
+              'button',
+              {
+                onClick: cancelEdit,
+                className: 'flex-1 bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded'
+              },
+              'Cancel'
+            )
+          )
+        )
+      )
+    ),
     React.createElement(
       'div',
       {
@@ -970,7 +1125,7 @@ showAddBox && React.createElement(
             'div',
             {
               key: box.id,
-              className: `absolute border-2 ${boxColors[box.color]} bg-transparent rounded-lg group`,
+              className: 'absolute rounded-lg group',
               style: {
                 left: `${box.x}px`,
                 top: `${box.y}px`,
@@ -978,34 +1133,58 @@ showAddBox && React.createElement(
                 height: `${box.height}px`,
                 zIndex: 2,
 		pointerEvents: 'none' // fix because i couldn't hover the connection lines while they were behind a box
-              },
-              onMouseDown: (e) => { //yah i broke dragging the box with the connection line fix.. smh
-		const rect = e.currentTarget.getBoundingClientRect();
-        	const borderWidth = 2;
- 	        const clickX = e.clientX - rect.left;
-    	        const clickY = e.clientY - rect.top;		
-        	const onBorder = clickX < borderWidth || clickX > rect.width - borderWidth ||
-                        	 clickY < borderWidth || clickY > rect.height - borderWidth;
-        
-        	if (onBorder) {
-		  handleBoxMouseDown(e, box)
-		}
-	      }
+              }
             },
 	    React.createElement('div', {
+	      className: `absolute top-0 left-0 right-0 border-t-2 ${boxColors[box.color]}`,
 	      style: {
-        	position: 'absolute',
-	        top: '2px',
-        	left: '2px',
-	        right: '2px',
-	        bottom: '2px',
-	        pointerEvents: 'none'
-	      }
+		height: '8px',
+	        pointerEvents: 'none',
+		cursor: 'move'
+	      },
+	      onMouseDown: (e) => handleBoxMouseDown(e, box)
 	    }),
+            React.createElement('div', {
+              className: `absolute bottom-0 left-0 right-0 border-b-2 ${boxColors[box.color]}`,
+              style: { 
+            	height: '8px', 
+            	pointerEvents: 'auto',
+            	cursor: 'move'
+              },
+              onMouseDown: (e) => handleBoxMouseDown(e, box)
+            }),
+            React.createElement('div', {
+              className: `absolute top-0 bottom-0 left-0 border-l-2 ${boxColors[box.color]}`,
+              style: { 
+            	width: '8px', 
+            	pointerEvents: 'auto',
+            	cursor: 'move'
+              },
+              onMouseDown: (e) => handleBoxMouseDown(e, box)
+            }),
+            React.createElement('div', {
+              className: `absolute top-0 bottom-0 right-0 border-r-2 ${boxColors[box.color]}`,
+              style: { 
+            	width: '8px', 
+            	pointerEvents: 'auto',
+            	cursor: 'move'
+              },
+              onMouseDown: (e) => handleBoxMouseDown(e, box)
+            }),
+            React.createElement('div', {
+              className: `absolute inset-0 border-2 ${boxColors[box.color]} rounded-lg`,
+              style: { pointerEvents: 'none' }
+            }),
             React.createElement(
               'div',
               { 
-		className: 'absolute -top-6 left-0 bg-gray-800 px-2 py-1 rounded text-white text-sm font-semibold' },
+                className: 'absolute -top-6 left-0 bg-gray-800 px-2 py-1 rounded text-white text-sm font-semibold cursor-pointer hover:bg-gray-700',
+                style: { pointerEvents: 'auto' },
+                onClick: (e) => {
+                  e.stopPropagation();
+                  startEditBox(box);
+                }
+              },
               box.name
             ),
             React.createElement(
@@ -1013,7 +1192,8 @@ showAddBox && React.createElement(
               {
                 onClick: () => removeBox(box.id),
                 className: 'absolute -top-2 -right-2 bg-red-600 hover:bg-red-700 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity z-10',
-                onMouseDown: (e) => e.stopPropagation()
+                onMouseDown: (e) => e.stopPropagation(),
+		style: { pointerEvents: 'auto' }
               },
               React.createElement(XIcon, { size: 12 })
             ),
@@ -1021,6 +1201,7 @@ showAddBox && React.createElement(
               'div',
               {
                 className: 'absolute bottom-0 right-0 w-4 h-4 cursor-nwse-resize',
+		style: { pointerEvents: 'auto' },
                 onMouseDown: (e) => {
                   e.stopPropagation();
                   setResizingBox(box.id);
@@ -1064,6 +1245,32 @@ showAddBox && React.createElement(
                   onMouseDown: (e) => e.stopPropagation()
                 },
                 React.createElement(XIcon, { size: 12 })
+              ),
+              React.createElement(
+                'button',
+                {
+                  onClick: (e) => {
+                    e.stopPropagation();
+                    startEditDevice(device);
+                  },
+                  className: 'absolute -top-2 -right-12 bg-blue-600 hover:bg-blue-700 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity z-10',
+                  onMouseDown: (e) => e.stopPropagation()
+                },
+                React.createElement('svg', {
+                  xmlns: 'http://www.w3.org/2000/svg',
+                  fill: 'none',
+                  viewBox: '0 0 24 24',
+                  strokeWidth: 2,
+                  stroke: 'currentColor',
+                  width: 12,
+                  height: 12
+                },
+                  React.createElement('path', {
+                    strokeLinecap: 'round',
+                    strokeLinejoin: 'round',
+                    d: 'M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10'
+                  })
+                )
               ),
               React.createElement(
                 'div',
