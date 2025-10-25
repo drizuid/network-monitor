@@ -6,8 +6,9 @@ It was written for me based on what I wanted, but a friend asked if he could get
 While I am happy to entertain ideas for new features, I made this for me, so if I don't see a use I won't work on something. 
 If you still want the change, submit a fully tested PR and I'm happy to entertain pulls.
 
-*disclaimer: this is pretty much fully rewritten using claude.ai now after asking it to optimize my code for efficiency
-             Some functions are purely written using claude.ai as I am brand new to react/js after a couple khan academy classes.*
+**Some functions are purely written using claude.ai as I am brand new to react/js after a couple khan academy classes.**
+*disclaimer: this is pretty much fully rewritten using claude.ai now after asking it to optimize my code for efficiency*
+
 
 docker run example:
 ```bash
