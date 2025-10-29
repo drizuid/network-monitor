@@ -826,7 +826,8 @@ const NetworkMonitor = () => {
             // i forgot the monitor to rep systems... oops make sure to add it
             React.createElement('option', { value: 'monitor' }, 'End-User Device'),
             // i forgot to create one for a switch
-            React.createElement('option', { value: 'switch' }, 'Switch')
+            React.createElement('option', { value: 'switch' }, 'Switch'),
+			React.createElement('option', { value: 'camera' }, 'Camera'),
           )
         ),
         React.createElement('button', {
@@ -944,6 +945,7 @@ showAddBox && React.createElement(
               React.createElement('option', { value: 'wifi' }, 'WiFi AP'),
               React.createElement('option', { value: 'storage' }, 'Storage'),
               React.createElement('option', { value: 'monitor' }, 'End-User Device'),
+			  React.createElement('option', { value: 'camera' }, 'Camera'),
               React.createElement('option', { value: 'switch' }, 'Switch')
             )
           ),
