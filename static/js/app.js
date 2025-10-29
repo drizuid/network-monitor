@@ -182,6 +182,23 @@ const MonitorIcon = (props) => React.createElement('svg', {
   })
 );
 
+const SecurityCameraIcon = (props) => React.createElement('svg', {
+  xmlns: 'http://www.w3.org/2000/svg',
+  fill: 'none',
+  viewBox: '0 0 24 24',
+  strokeWidth: props.strokeWidth || 1.5,
+  stroke: 'currentColor',
+  width: props.size || 24,
+  height: props.size || 24,
+  className: props.className
+}, 
+  React.createElement('path', {
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+    d: 'M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z'
+  })
+);
+
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
@@ -394,8 +411,8 @@ const NetworkMonitor = () => {
       case 'switch': return SwitchIcon;
       case 'wifi': return WifiIcon;
       case 'storage': return StorageIcon;
-      // forgot end-user device, dont forget to add it
       case 'monitor': return MonitorIcon;
+      case 'camera': return SecurityCameraIcon;
       default: return MonitorIcon;
     }
   };
@@ -809,7 +826,8 @@ const NetworkMonitor = () => {
             // i forgot the monitor to rep systems... oops make sure to add it
             React.createElement('option', { value: 'monitor' }, 'End-User Device'),
             // i forgot to create one for a switch
-            React.createElement('option', { value: 'switch' }, 'Switch')
+            React.createElement('option', { value: 'switch' }, 'Switch'),
+			React.createElement('option', { value: 'camera' }, 'Camera'),
           )
         ),
         React.createElement('button', {
@@ -927,6 +945,7 @@ showAddBox && React.createElement(
               React.createElement('option', { value: 'wifi' }, 'WiFi AP'),
               React.createElement('option', { value: 'storage' }, 'Storage'),
               React.createElement('option', { value: 'monitor' }, 'End-User Device'),
+			  React.createElement('option', { value: 'camera' }, 'Camera'),
               React.createElement('option', { value: 'switch' }, 'Switch')
             )
           ),
